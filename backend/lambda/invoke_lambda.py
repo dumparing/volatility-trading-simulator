@@ -18,7 +18,9 @@ def fetch_spy_data_alpha_vantage(api_key, days=100):
     data = response.json()
 
     if 'Time Series (Daily)' not in data:
-        raise ValueError(f"Failed to fetch data: {data.get('Note', data.get('Error Message', 'Unknown error'))}")
+        print(f"API Response: {data}")
+        error_msg = data.get('Note', data.get('Error Message', data.get('Information', str(data))))
+        raise ValueError(f"Failed to fetch data: {error_msg}")
 
     time_series = data['Time Series (Daily)']
 
