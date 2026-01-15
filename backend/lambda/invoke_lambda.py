@@ -76,12 +76,20 @@ def main():
     if result.get('statusCode') == 200:
         body = json.loads(result['body'])
         print("\n=== PREDICTION SUCCESSFUL ===")
-        print(f"Date: {body['date']}")
-        print(f"Prediction: {body['prediction_text']}")
-        print(f"Confidence: {body['confidence_level']} ({body['confidence_score']:.2%})")
-        print(f"\nKey Features:")
-        for feature, value in body['key_features'].items():
-            print(f"  {feature}: {value:.6f}")
+        print(f"Full response: {body}")
+        print(f"Date: {body.get('date', 'N/A')}")
+
+        if 'prediction_text' in body:
+            print(f"Prediction: {body['prediction_text']}")
+            print(f"Confidence: {body['confidence_level']} ({body['confidence_score']:.2%})")
+        else:
+            print(f"Prediction: {body.get('prediction', 'N/A')}")
+            print(f"Confidence: {body.get('confidence', 'N/A')}")
+
+        if 'key_features' in body:
+            print(f"\nKey Features:")
+            for feature, value in body['key_features'].items():
+                print(f"  {feature}: {value:.6f}")
     else:
         print(f"\n=== PREDICTION FAILED ===")
         print(f"Status: {result.get('statusCode')}")
