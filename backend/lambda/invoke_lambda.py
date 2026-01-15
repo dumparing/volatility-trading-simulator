@@ -9,7 +9,7 @@ def fetch_spy_data_alpha_vantage(api_key, days=100):
     params = {
         'function': 'TIME_SERIES_DAILY',
         'symbol': 'SPY',
-        'outputsize': 'full',  # get full history
+        'outputsize': 'compact',  # free tier: last 100 days
         'apikey': api_key
     }
 
