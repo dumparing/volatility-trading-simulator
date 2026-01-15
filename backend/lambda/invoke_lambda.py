@@ -76,15 +76,20 @@ def main():
     if result.get('statusCode') == 200:
         body = json.loads(result['body'])
         print("\n=== PREDICTION SUCCESSFUL ===")
-        print(f"Full response: {body}")
         print(f"Date: {body.get('date', 'N/A')}")
 
+        # handle both old and new response formats
         if 'prediction_text' in body:
-            print(f"Prediction: {body['prediction_text']}")
-            print(f"Confidence: {body['confidence_level']} ({body['confidence_score']:.2%})")
+            prediction_text = body['prediction_text']
         else:
-            print(f"Prediction: {body.get('prediction', 'N/A')}")
-            print(f"Confidence: {body.get('confidence', 'N/A')}")
+            prediction = body.get('prediction', 0)
+            prediction_text = "volatility will increase" if prediction == 1 else "volatility will decrease"
+
+        confidence_score = body.get('confidence_score', body.get('confidence', 0))
+        confidence_level = body.get('confidence_level', 'unknown')
+
+        print(f"Prediction: {prediction_text}")
+        print(f"Confidence: {confidence_level} ({confidence_score:.2%})")
 
         if 'key_features' in body:
             print(f"\nKey Features:")
