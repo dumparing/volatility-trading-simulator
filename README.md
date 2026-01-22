@@ -21,15 +21,35 @@ trained on 2,768 days of spy data from 2014-2024
 
 ## tech stack
 
-ml: xgboost, pandas, numpy, scikit-learn
-cloud: aws lambda (containerized), s3, dynamodb
-automation: github actions
-data: alpha vantage api (free tier, 100 days)
+**backend:**
+- ml: xgboost, pandas, numpy, scikit-learn
+- cloud: aws lambda (containerized), s3, dynamodb, api gateway
+- automation: github actions
+- data: alpha vantage api (free tier, 100 days)
 
-cost: about $0.03/month (mostly free tier)
+**frontend:**
+- react 18 + typescript
+- vite, tailwind css, recharts
+- tanstack query, axios
+- deployed on vercel
+
+cost: about $0.08/month (mostly free tier)
+
+## frontend dashboard
+
+live demo: [your-vercel-url.vercel.app](https://your-vercel-url.vercel.app) (deploy to add url)
+
+features:
+- latest prediction card with confidence visualization
+- historical prediction chart (last 90 days)
+- accuracy metrics by confidence level
+- technical indicators chart (rsi, volatility, macd, bollinger bands, volume ratio)
+
+see [frontend/README.md](frontend/README.md) for setup instructions.
 
 ## how to run locally
 
+**backend:**
 ```bash
 # get spy data
 python get_real_data.py
@@ -41,9 +61,33 @@ python backend/src/feature_engineering.py
 python test_model_predictions.py
 ```
 
+**frontend:**
+```bash
+cd frontend
+npm install
+npm run dev
+# open http://localhost:5173
+```
+
 ## architecture
 
-lambda container loads xgboost model from s3, engineers 31 features from ohlcv data, makes prediction, saves to dynamodb. github actions fetches spy data via alpha vantage api and invokes lambda daily.
+```
+React Dashboard (Vercel)
+    ↓ HTTPS
+API Gateway (REST)
+    ↓ Lambda Proxy
+Read Lambda (128MB)
+    ↓ Query
+DynamoDB (predictions)
+    ↑ Write
+Prediction Lambda (1024MB)
+    ↑ Trigger Daily
+GitHub Actions (5pm ET)
+```
+
+**prediction flow:** github actions fetches spy data from alpha vantage → invokes prediction lambda → lambda loads xgboost model from s3 → engineers 31 features → makes prediction → saves to dynamodb with confidence scores
+
+**dashboard flow:** react app calls api gateway → read lambda queries dynamodb → returns predictions, accuracy metrics, and historical data → visualized with recharts
 
 ## example output
 

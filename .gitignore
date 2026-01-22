@@ -1,8 +1,5 @@
 # personal documentation (keep private)
-ARCHITECTURE.md
-DEPLOYMENT_SUMMARY.md
-PROJECT_HISTORY.md
-backend/REGIME_ANALYSIS_VERIFICATION.md
+docs/
 backend/EVALUATION_METRICS.json
 
 # Byte-compiled / optimized / DLL files

@@ -1,6 +1,6 @@
 import { Card } from '../ui/Card';
 import type { Prediction } from '@/types/prediction';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, ComposedChart } from 'recharts';
+import { Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, ComposedChart } from 'recharts';
 import { format } from 'date-fns';
 
 interface HistoricalChartProps {

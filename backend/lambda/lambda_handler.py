@@ -5,7 +5,8 @@ import boto3
 import os
 from io import BytesIO
 from feature_utils import engineer_features, get_feature_columns
-from dynamodb_helper import save_prediction_to_dynamodb
+from dynamodb_helper import save_prediction_to_dynamodb, get_prediction, update_prediction_accuracy
+from datetime import datetime, timedelta
 
 # cache model in memory for container reuse
 model = None
@@ -117,6 +118,31 @@ def lambda_handler(event, context):
 
         if os.environ.get('DYNAMODB_TABLE'):
             save_prediction_to_dynamodb(date_str, prediction, prediction_text, confidence_score, confidence_level, key_features)
+
+            try:
+                if len(df_features) >= 2:
+                    yesterday_date = df_features.index[-2]
+                    yesterday_str = yesterday_date.strftime('%Y-%m-%d') if hasattr(yesterday_date, 'strftime') else str(yesterday_date)
+
+                    yesterday_pred = get_prediction(yesterday_str)
+
+                    if yesterday_pred and 'is_correct' not in yesterday_pred:
+                        today_vol_idx = feature_cols.index('volatility_20d')
+                        today_vol = float(X[0, today_vol_idx])
+
+                        yesterday_row = df_features.iloc[-2]
+                        X_yesterday = yesterday_row[feature_cols].values.reshape(1, -1)
+                        yesterday_vol = float(X_yesterday[0, today_vol_idx])
+
+                        actual_change = 1 if today_vol > yesterday_vol else 0
+
+                        predicted_change = yesterday_pred['prediction']
+                        is_correct = (actual_change == predicted_change)
+
+                        update_prediction_accuracy(yesterday_str, today_vol, actual_change, is_correct)
+                        print(f"updated {yesterday_str}: predicted={predicted_change}, actual={actual_change}, correct={is_correct}")
+            except Exception as e:
+                print(f"error updating yesterday's accuracy: {str(e)}")
 
         # build response
         response = {
