@@ -20,6 +20,26 @@ def decimal_to_float(obj):
     else:
         return obj
 
+def transform_prediction(item):
+    confidence = float(item.get('confidence', 0))
+    prediction = int(item.get('prediction', 0))
+
+    if confidence > 0.7:
+        confidence_level = 'high'
+    elif confidence > 0.5:
+        confidence_level = 'medium'
+    else:
+        confidence_level = 'low'
+
+    prediction_text = 'INCREASE' if prediction == 1 else 'DECREASE'
+
+    transformed = dict(item)
+    transformed['confidence_score'] = confidence
+    transformed['confidence_level'] = confidence_level
+    transformed['prediction_text'] = prediction_text
+
+    return transformed
+
 def lambda_handler(event, context):
     http_method = event.get('httpMethod', '')
     path = event.get('path', '')
@@ -74,7 +94,7 @@ def get_latest_prediction():
         raise Exception('no predictions found')
 
     items.sort(key=lambda x: x['date'], reverse=True)
-    return items[0]
+    return transform_prediction(items[0])
 
 def get_predictions_range(start_date, end_date):
     response = table.scan(
@@ -84,7 +104,7 @@ def get_predictions_range(start_date, end_date):
     items = response.get('Items', [])
     items.sort(key=lambda x: x['date'])
 
-    return items
+    return [transform_prediction(item) for item in items]
 
 def get_all_predictions(limit=90):
     response = table.scan()
@@ -92,7 +112,7 @@ def get_all_predictions(limit=90):
 
     items.sort(key=lambda x: x['date'], reverse=True)
 
-    return items[:limit]
+    return [transform_prediction(item) for item in items[:limit]]
 
 def get_accuracy_metrics():
     response = table.scan()

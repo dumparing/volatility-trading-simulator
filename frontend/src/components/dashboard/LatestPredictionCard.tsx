@@ -22,9 +22,6 @@ export const LatestPredictionCard = ({ data }: LatestPredictionCardProps) => {
           </div>
           <div>
             <div className={`text-4xl font-bold ${isIncrease ? 'text-success-600' : 'text-danger-600'}`}>
-              {isIncrease ? 'INCREASE' : 'DECREASE'}
-            </div>
-            <div className="text-lg text-gray-600 mt-1">
               {data.prediction_text}
             </div>
           </div>
