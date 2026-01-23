@@ -53,7 +53,12 @@ export const LatestPredictionCard = ({ data }: LatestPredictionCardProps) => {
           </div>
           <div>
             <span className="font-medium">predicted at:</span>{' '}
-            {format(new Date(data.timestamp), 'h:mm a')} ET
+            {new Date(data.timestamp).toLocaleString('en-US', {
+              hour: 'numeric',
+              minute: '2-digit',
+              hour12: true,
+              timeZone: 'America/Denver'
+            })} MT
           </div>
         </div>
 

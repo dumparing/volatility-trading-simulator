@@ -21,17 +21,24 @@ def decimal_to_float(obj):
         return obj
 
 def transform_prediction(item):
-    confidence = float(item.get('confidence', 0))
+    confidence = float(item.get('confidence_score', item.get('confidence', 0)))
     prediction = int(item.get('prediction', 0))
 
-    if confidence > 0.7:
+    existing_level = item.get('confidence_level')
+    if existing_level:
+        confidence_level = existing_level
+    elif confidence > 0.7:
         confidence_level = 'high'
     elif confidence > 0.5:
         confidence_level = 'medium'
     else:
         confidence_level = 'low'
 
-    prediction_text = 'INCREASE' if prediction == 1 else 'DECREASE'
+    existing_text = item.get('prediction_text')
+    if existing_text:
+        prediction_text = existing_text
+    else:
+        prediction_text = 'INCREASE' if prediction == 1 else 'DECREASE'
 
     transformed = dict(item)
     transformed['confidence_score'] = confidence
