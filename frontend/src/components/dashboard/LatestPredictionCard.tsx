@@ -49,7 +49,7 @@ export const LatestPredictionCard = ({ data }: LatestPredictionCardProps) => {
         <div className="flex items-center justify-between text-sm text-gray-500 border-t pt-4">
           <div>
             <span className="font-medium">date:</span>{' '}
-            {format(new Date(data.date), 'MMMM d, yyyy')}
+            {format(new Date(data.date + 'T12:00:00'), 'MMMM d, yyyy')}
           </div>
           <div>
             <span className="font-medium">predicted at:</span>{' '}

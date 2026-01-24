@@ -27,7 +27,7 @@ export const HistoricalChart = ({ data }: HistoricalChartProps) => {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="date"
-            tickFormatter={(value) => format(new Date(value), 'MMM d')}
+            tickFormatter={(value) => format(new Date(value + 'T12:00:00'), 'MMM d')}
           />
           <YAxis
             label={{ value: 'confidence (%)', angle: -90, position: 'insideLeft' }}
@@ -39,7 +39,7 @@ export const HistoricalChart = ({ data }: HistoricalChartProps) => {
                 const data = payload[0].payload;
                 return (
                   <div className="bg-white p-4 border border-gray-200 rounded shadow-lg">
-                    <p className="font-bold">{format(new Date(data.date), 'MMMM d, yyyy')}</p>
+                    <p className="font-bold">{format(new Date(data.date + 'T12:00:00'), 'MMMM d, yyyy')}</p>
                     <p className="text-sm">{data.predictionText}</p>
                     <p className="text-sm">
                       confidence: <span className="font-medium">{data.confidence.toFixed(1)}%</span>
