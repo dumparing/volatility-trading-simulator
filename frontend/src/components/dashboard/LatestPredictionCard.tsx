@@ -62,31 +62,6 @@ export const LatestPredictionCard = ({ data }: LatestPredictionCardProps) => {
           </div>
         </div>
 
-        <div className="border-t pt-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">key indicators</h3>
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <span className="font-medium text-gray-700">volatility (20d):</span>{' '}
-              <span className="text-gray-900">{data.volatility_20d.toFixed(4)}</span>
-            </div>
-            <div>
-              <span className="font-medium text-gray-700">rsi:</span>{' '}
-              <span className="text-gray-900">{data.rsi.toFixed(2)}</span>
-            </div>
-            <div>
-              <span className="font-medium text-gray-700">bollinger width:</span>{' '}
-              <span className="text-gray-900">{data.bb_width.toFixed(4)}</span>
-            </div>
-            <div>
-              <span className="font-medium text-gray-700">macd:</span>{' '}
-              <span className="text-gray-900">{data.macd.toFixed(3)}</span>
-            </div>
-            <div>
-              <span className="font-medium text-gray-700">volume ratio:</span>{' '}
-              <span className="text-gray-900">{data.volume_ratio.toFixed(2)}</span>
-            </div>
-          </div>
-        </div>
       </div>
     </Card>
   );
