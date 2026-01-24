@@ -8,6 +8,7 @@ interface AccuracyMetricsProps {
 export const AccuracyMetrics = ({ data }: AccuracyMetricsProps) => {
   const accuracyPercent = (data.accuracy_rate * 100).toFixed(1);
   const recent30dPercent = (data.recent_30d_accuracy * 100).toFixed(1);
+  const hasData = data.total_predictions > 0;
 
   const getAccuracyColor = (rate: number) => {
     if (rate >= 0.6) return 'text-green-600';
@@ -20,6 +21,20 @@ export const AccuracyMetrics = ({ data }: AccuracyMetricsProps) => {
     if (rate >= 0.5) return 'bg-yellow-500';
     return 'bg-red-500';
   };
+
+  if (!hasData) {
+    return (
+      <Card>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">prediction accuracy</h2>
+        <div className="text-center py-8">
+          <p className="text-gray-500 mb-2">no verified predictions yet</p>
+          <p className="text-sm text-gray-400">
+            accuracy tracking starts after predictions are verified against actual market data
+          </p>
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card>

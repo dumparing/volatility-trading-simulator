@@ -27,20 +27,21 @@ def transform_prediction(item):
     existing_level = item.get('confidence_level')
     if existing_level:
         confidence_level = existing_level
-    elif confidence > 0.7:
+    elif confidence >= 0.70:
         confidence_level = 'high'
-    elif confidence > 0.5:
+    elif confidence >= 0.55:
         confidence_level = 'medium'
     else:
         confidence_level = 'low'
 
     existing_text = item.get('prediction_text')
     if existing_text:
-        prediction_text = existing_text
+        prediction_text = existing_text.lower() if isinstance(existing_text, str) else existing_text
     else:
-        prediction_text = 'INCREASE' if prediction == 1 else 'DECREASE'
+        prediction_text = 'volatility will increase' if prediction == 1 else 'volatility will decrease'
 
     transformed = dict(item)
+    transformed['prediction'] = prediction
     transformed['confidence_score'] = confidence
     transformed['confidence_level'] = confidence_level
     transformed['prediction_text'] = prediction_text

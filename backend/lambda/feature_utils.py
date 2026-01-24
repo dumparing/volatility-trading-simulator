@@ -52,7 +52,6 @@ def calculate_volume_indicators(df):
 def calculate_price_momentum(df):
     df['momentum_5'] = df['Close'] - df['Close'].shift(5)
     df['momentum_10'] = df['Close'] - df['Close'].shift(10)
-    df['momentum_20'] = df['Close'] - df['Close'].shift(20)
     df['roc_5'] = ((df['Close'] - df['Close'].shift(5)) / df['Close'].shift(5)) * 100
     df['roc_10'] = ((df['Close'] - df['Close'].shift(10)) / df['Close'].shift(10)) * 100
     return df
@@ -94,7 +93,7 @@ def get_feature_columns():
         'ema_12', 'ema_26',
         'rsi', 'atr',
         'volume_sma_20', 'volume_ratio', 'volume_change',
-        'momentum_5', 'momentum_10', 'momentum_20',
+        'momentum_5', 'momentum_10',
         'roc_5', 'roc_10',
         'bb_middle', 'bb_upper', 'bb_lower', 'bb_width',
         'macd', 'macd_signal', 'macd_histogram'
